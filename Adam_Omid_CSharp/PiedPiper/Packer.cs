@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PiedPiper
 {
@@ -12,15 +9,33 @@ namespace PiedPiper
 
         public class Bin
         {
-            public List<int> pipes = new List<int>();
+            private readonly List<int> _pipes = new List<int>();
 
             public int CurrentSize()
             {
-                return pipes.Sum(p => p);
+                return _pipes.Sum(p => p);
             }
-        }
 
-        public List<Bin> bines = new List<Bin>();
+            public void Add(int pipe)
+            {
+                _pipes.Add(pipe);
+            }
+
+            public int PipeCount
+            {
+                get { return _pipes.Count; }
+            }
+
+            public int this[int index]
+            {
+                get { return _pipes[index]; }
+            }
+
+            public IEnumerable<int> Pipes
+            {
+                get { return _pipes; }
+            } 
+        }
 
         public Packer(int binSize )
         {
@@ -31,58 +46,33 @@ namespace PiedPiper
         {
             pipes = pipes.OrderByDescending(p  => p).ToList();
 
-            #region Complex
-            List<int> orderedPipes = new List<int>();
+            var bins = new List<Bin>();
 
-            int minPipe = pipes.Min(p => p);
-            int pipeIndex = 0;
-            bool newLap = true;
-            if (coolSorting)
+            foreach(var pipe in pipes)
             {
-                while (pipes.Any())
+                if (!Fit(bins, pipe))
                 {
-                    if (newLap || orderedPipes.Sum(p => p) + pipes[pipeIndex] == _binSize || orderedPipes.Sum(p => p) + pipes[pipeIndex] + minPipe <= _binSize)
-                    {
-                        newLap = false;
-                        orderedPipes.Add(pipes[pipeIndex]);
-                        pipes.RemoveAt(pipeIndex);
-                    }
-                    else
-                    {
-                        newLap = false;
-                        pipeIndex++;
-                        if (pipeIndex >= pipes.Count)
-                        {
-                            newLap = true;
-                            pipeIndex = 0;
-                        }
-                    }
+                    var newBin = new Bin();
+                    newBin.Add(pipe);
+                    bins.Add(newBin);
                 }
             }
 
-            #endregion
-
-            foreach (var pipe in coolSorting ? orderedPipes : pipes)
-            {
-                if (!Fit(pipe)) return null;
-            }
-            return bines;
+            return bins;
         }
 
-        private bool Fit(int pipe)
+        private bool Fit(IEnumerable<Bin> bins, int pipe)
         {
-            if (pipe > _binSize) return false;
-            foreach (Bin bin in bines)
+            foreach (var bin in bins)
             {
                 if (bin.CurrentSize() + pipe <= _binSize)
                 {
-                    bin.pipes.Add(pipe);
+                    bin.Add(pipe);
                     return true;
                 }
             }
 
-            bines.Add(new Bin() {pipes = new List<int>{pipe}});
-            return true;
+            return false;
         }
     }
 }

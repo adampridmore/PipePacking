@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PiedPiper;
 
@@ -13,11 +12,11 @@ namespace PackerTest
         [TestMethod]
         public void SmokeTest()
         {
-            var bins = new Packer(10).Pack(new List<int>() {10});
+            var bins = new Packer(10).Pack(new List<int> {10});
 
             Assert.AreEqual(1,bins.Count);
-            Assert.AreEqual(1,bins[0].pipes.Count);
-            Assert.AreEqual(10, bins[0].pipes[0]);
+            Assert.AreEqual(1,bins[0].PipeCount);
+            Assert.AreEqual(10, bins[0][0]);
         }
 
         [TestMethod]
@@ -26,9 +25,9 @@ namespace PackerTest
             var bins = new Packer(10).Pack(new List<int>() { 5, 5 });
 
             Assert.AreEqual(1, bins.Count);
-            Assert.AreEqual(2, bins[0].pipes.Count);
-            Assert.AreEqual(5, bins[0].pipes[0]);
-            Assert.AreEqual(5, bins[0].pipes[1]);
+            Assert.AreEqual(2, bins[0].PipeCount);
+            Assert.AreEqual(5, bins[0][0]);
+            Assert.AreEqual(5, bins[0][1]);
         }
 
         [TestMethod]
@@ -38,11 +37,11 @@ namespace PackerTest
 
             Assert.AreEqual(2, bins.Count);
             
-            Assert.AreEqual(1, bins[0].pipes.Count);
-            Assert.AreEqual(5, bins[0].pipes[0]);
+            Assert.AreEqual(1, bins[0].PipeCount);
+            Assert.AreEqual(5, bins[0][0]);
 
-            Assert.AreEqual(1, bins[1].pipes.Count);
-            Assert.AreEqual(5, bins[1].pipes[0]);
+            Assert.AreEqual(1, bins[1].PipeCount);
+            Assert.AreEqual(5, bins[1][0]);
         }
 
         [TestMethod]
@@ -65,7 +64,7 @@ namespace PackerTest
             Console.WriteLine("Bins: " + bins.Count);
             foreach (var bin in bins)
             {
-                Console.WriteLine(String.Join(",", bin.pipes));
+                Console.WriteLine(String.Join(",", bin.Pipes));
             }
 
             Console.WriteLine("**Desc sorting");
@@ -73,7 +72,7 @@ namespace PackerTest
             Console.WriteLine("Bins: " + bins.Count);
             foreach (var bin in bins)
             {
-                Console.WriteLine(String.Join(",", bin.pipes));
+                Console.WriteLine(String.Join(",", bin.Pipes));
             }
         }
 
@@ -81,6 +80,12 @@ namespace PackerTest
         public void FitFirstChallenge()
         {
             RunExample(10, new List<int> { 2, 2, 3, 4, 4, 5 });
+        }
+
+        [TestMethod]
+        public void SubOptimal()
+        {
+            RunExample(10, new List<int> { 7,3,3,3,2,2,2 });
         }
     }
 }
