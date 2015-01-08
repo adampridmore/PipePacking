@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PiedPiper;
@@ -50,26 +51,18 @@ namespace PackerTest
             RunExample(13, new List<int> { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9 });
         }
 
-        private void RunExample(int binSize, List<int> pipes)
+        private void RunExample(int binSize, List<int> pipes, bool sortPipes = true)
         {
             Console.WriteLine("BinSize: " + binSize);
             
             Console.WriteLine(String.Join(",", pipes));
             Console.WriteLine("Total Pipes Size: " + pipes.Sum(p => p));
-            Console.WriteLine("Min Bins : " + pipes.Sum(p => p) / 13M);
-            Console.WriteLine("TotalPipesSize mod 13: " + pipes.Sum(p => p) % 13);
+            Console.WriteLine("Min Bins : " + Math.Ceiling(pipes.Sum(p => p) / 13M));
+            Console.WriteLine("Pipes sorted: " + sortPipes);
+            
+            var bins = new Packer(binSize).Pack(pipes, sortPipes);
 
-            Console.WriteLine("**Cool sorting");
-            var bins = new Packer(binSize).Pack(pipes);
-            Console.WriteLine("Bins: " + bins.Count);
-            foreach (var bin in bins)
-            {
-                Console.WriteLine(String.Join(",", bin.Pipes));
-            }
-
-            Console.WriteLine("**Desc sorting");
-            bins = new Packer(binSize).Pack(pipes, false);
-            Console.WriteLine("Bins: " + bins.Count);
+            Console.WriteLine("Solution: Bins Count: " + bins.Count);
             foreach (var bin in bins)
             {
                 Console.WriteLine(String.Join(",", bin.Pipes));
@@ -85,7 +78,23 @@ namespace PackerTest
         [TestMethod]
         public void SubOptimal()
         {
-            RunExample(10, new List<int> { 7,3,3,3,2,2,2 });
+            RunExample(11, new List<int> { 7, 2, 2,2, 3, 3, 3 }, true);
+            RunExample(11, new List<int> { 7, 2, 2,2, 3, 3, 3 }, false);
+        }
+
+        [TestMethod]
+        public void BruteForce1()
+        {
+            var pipes = new[] {7, 3, 3, 3, 2, 2, 2};
+            BruteForce.RunBruteForce(11, pipes);
+        }
+
+        [TestMethod]
+        public void BruteForce2()
+        {
+            var pipes = new[] {1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9};
+
+            BruteForce.RunBruteForce(13, pipes);
         }
     }
 }

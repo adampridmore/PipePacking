@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace PiedPiper
 {
@@ -42,13 +43,16 @@ namespace PiedPiper
             _binSize = binSize;
         }
 
-        public List<Bin> Pack(List<int> pipes, bool coolSorting = true)
+        public List<Bin> Pack(IEnumerable<int> pipes, bool coolSorting = true)
         {
-            pipes = pipes.OrderByDescending(p  => p).ToList();
-
+            if (coolSorting)
+            {
+                pipes = pipes.OrderByDescending(p => p).ToList();    
+            }
+        
             var bins = new List<Bin>();
 
-            foreach(var pipe in pipes)
+            foreach (var pipe in pipes)
             {
                 if (!Fit(bins, pipe))
                 {
