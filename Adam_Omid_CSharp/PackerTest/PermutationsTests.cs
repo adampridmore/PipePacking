@@ -54,7 +54,5 @@ namespace PackerTest
                 Console.WriteLine(String.Join(",", list));
             } while (Permutation.NextPermutation(list));
         }
-
-       
     }
 }

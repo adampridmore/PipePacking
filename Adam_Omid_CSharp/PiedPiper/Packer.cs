@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace PiedPiper
 {
@@ -8,55 +7,30 @@ namespace PiedPiper
     {
         private readonly int _binSize;
 
-        public class Bin
-        {
-            private readonly List<int> _pipes = new List<int>();
-
-            public int CurrentSize()
-            {
-                return _pipes.Sum(p => p);
-            }
-
-            public void Add(int pipe)
-            {
-                _pipes.Add(pipe);
-            }
-
-            public int PipeCount
-            {
-                get { return _pipes.Count; }
-            }
-
-            public int this[int index]
-            {
-                get { return _pipes[index]; }
-            }
-
-            public IEnumerable<int> Pipes
-            {
-                get { return _pipes; }
-            } 
-        }
-
         public Packer(int binSize )
         {
             _binSize = binSize;
         }
 
-        public List<Bin> Pack(IEnumerable<int> pipes, bool coolSorting = true)
+        public List<Bin> Pack(IEnumerable<int> pipes, bool sort = true)
         {
-            if (coolSorting)
+            if (sort)
             {
                 pipes = pipes.OrderByDescending(p => p).ToList();    
             }
-        
+
+            return PackPipes(pipes);
+        }
+
+        private List<Bin> PackPipes(IEnumerable<int> pipes)
+        {
             var bins = new List<Bin>();
 
             foreach (var pipe in pipes)
             {
                 if (!Fit(bins, pipe))
                 {
-                    var newBin = new Bin();
+                    var newBin = new Bin(_binSize);
                     newBin.Add(pipe);
                     bins.Add(newBin);
                 }
@@ -67,16 +41,7 @@ namespace PiedPiper
 
         private bool Fit(IEnumerable<Bin> bins, int pipe)
         {
-            foreach (var bin in bins)
-            {
-                if (bin.CurrentSize() + pipe <= _binSize)
-                {
-                    bin.Add(pipe);
-                    return true;
-                }
-            }
-
-            return false;
+            return bins.Any(bin => bin.TryAddPipe(pipe));
         }
     }
 }
