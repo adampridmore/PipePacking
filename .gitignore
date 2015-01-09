@@ -180,3 +180,4 @@ FakesAssemblies/
 
 # Erlang compiled files
 *.beam
+/Adam_Omid_CSharp/packages/NUnit.2.6.4
