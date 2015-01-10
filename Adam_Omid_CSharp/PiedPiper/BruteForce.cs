@@ -19,6 +19,8 @@ namespace PiedPiper
             var stopwatch = Stopwatch.StartNew();
             var attemptCount = 0;
 
+            Console.WriteLine("Permutations to try: " + totalPermutations.ToString("N0"));
+
             foreach(var pipePermtation in Permutation.GetPermutations(pipes))
             {
                 var numberOfBinsRequired = GetNumberOfBinsRequired(packer, pipePermtation);
@@ -53,13 +55,14 @@ namespace PiedPiper
             var tps = attemptCount/stopwatch.Elapsed.TotalSeconds;
 
             var secondsToGo = (totalPermutations - attemptCount)/new BigInteger(tps);
-            var completeAt = DateTime.Now + TimeSpan.FromSeconds((int) secondsToGo);
+            var toGo = TimeSpan.FromSeconds((int) secondsToGo);
+            var completeAt = DateTime.Now + toGo;
 
-            Console.WriteLine("Attempt: {0}, TPS: {1}, CompleteAt:{2}, SecondsToGo: {3}, BestSoFar: {4}",
+            Console.WriteLine("Attempt: {0}, TPS: {1}, CompleteAt:{2}, ToGo: {3}, BestSoFar: {4}",
                 attemptCount.ToString("N0"),
                 tps.ToString("N0"),
                 completeAt,
-                secondsToGo,
+                toGo,
                 smallestNumberOfBins
                 );
         }

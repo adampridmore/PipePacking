@@ -28,9 +28,9 @@ namespace PiedPiper
             //9 - (4)
             //9 - (4)
             //Solutions tried: 302,702,400, Duration 936.9149753s:
-            var pipes = new[] { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9 };
-            var result = BruteForce.Execute(13, pipes);
-            Console.WriteLine(result);
+            //            var pipes = new[] { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9 };
+            //            var result = BruteForce.Execute(13, pipes);
+            //            Console.WriteLine(result);
 
 
             //A Best Solution:
@@ -40,8 +40,11 @@ namespace PiedPiper
             //5,5,6,6
             //Solutions tried: 672672000, Duration 1374.9416846s:
             //Press any key to continue . . .
-            //            var pipes = new[] { 2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6 };
-            //            BruteForce.Execute(22, pipes, false);
+//            var pipes = new[] { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6 };
+//            BruteForce.Execute(22, pipes);
+
+            var pipes = new[] { 1,2,3,4,5,6,7,8,9,10,11,12};
+            BruteForce.Execute(13, pipes);
         }
     }
 }
