@@ -1,58 +1,60 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PiedPiper;
 
 namespace PackerTest
 {
+    // http://www.mathwarehouse.com/probability/permutations-repeated-items.php
     [TestClass]
     public class PermutationsTests
     {
-//        [TestMethod]
-//        public void GetPowerSetTest()
-//        {
-//            var list = new List<int> {1,2,3,4,5,6,7,8};
-//
-//            var set = GetPowerSet(list);
-//
-//            var sb = new StringBuilder();
-//
-//            foreach (var combination in set)
-//            {
-//                sb.AppendLine(String.Join(",", combination));
-//            }
-//
-//            Console.WriteLine(sb.ToString());
-//        }
-//
-//        public IEnumerable<IEnumerable<T>> GetPowerSet<T>(List<T> list)
-//        {
-//            return from m in Enumerable.Range(0, 1 << list.Count)
-//                   select
-//                       from i in Enumerable.Range(0, list.Count)
-//                       where (m & (1 << i)) != 0
-//                       select list[i];
-//        }
-
         [TestMethod]
-        public void SingleItemInList()
+        public void Permutation_GetEnumerator()
         {
-            var list = new [] { 1, 2, 3};
+            var list = new[] { 1, 2 };
 
-            do
-            {
-                Console.WriteLine(String.Join(",", list));
-            } while (Permutation.NextPermutation(list));
+            var results = Permutation.GetPermutations(list).ToList();
+
+            Assert.AreEqual(2, results.Count);
+            CollectionAssert.AreEquivalent(new[] {1, 2}, results[0]);
+            CollectionAssert.AreEquivalent(new[] { 2, 1 }, results[1]);
         }
 
         [TestMethod]
-        public void LargeList()
+        public void Permutation_GetEnumerator_In_Different_Order()
         {
-            var list = new[] { 7, 2, 2, 3, 3, 3 };
+            var list = new[] { 2 ,1};
 
-            do
-            {
-                Console.WriteLine(String.Join(",", list));
-            } while (Permutation.NextPermutation(list));
+            var results = Permutation.GetPermutations(list).ToList();
+
+            Assert.AreEqual(2, results.Count);
+            CollectionAssert.AreEquivalent(new[] { 1, 2 }, results[0]);
+            CollectionAssert.AreEquivalent(new[] { 2, 1 }, results[1]);
         }
+
+        [TestMethod]
+        public void Duplicates()
+        {
+            var list = new[] { 1, 1};
+
+            var results = Permutation.GetPermutations(list).ToList();
+
+            Assert.AreEqual(1, results.Count);
+            CollectionAssert.AreEquivalent(new[] { 1, 1 }, results[0]);
+        }
+
+        [TestMethod]
+        public void Duplicates_with_more_values()
+        {
+            var list = new[] { 1, 1, 2};
+
+            var results = Permutation.GetPermutations(list).ToList();
+
+            Assert.AreEqual(3, results.Count);
+            CollectionAssert.AreEquivalent(new[] { 1, 1 ,2}, results[0]);
+            CollectionAssert.AreEquivalent(new[] { 1, 2, 1 }, results[0]);
+            CollectionAssert.AreEquivalent(new[] { 2, 1, 1 }, results[0]);
+        }
+
     }
 }

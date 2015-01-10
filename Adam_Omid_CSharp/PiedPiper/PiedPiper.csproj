@@ -47,9 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bin.cs" />
+    <Compile Include="BigIntegerUtil.cs" />
     <Compile Include="BruteForce.cs" />
     <Compile Include="Packer.cs" />
     <Compile Include="Permutation.cs" />
+    <Compile Include="PipePackingResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

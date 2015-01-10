@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PiedPiper;
 
@@ -8,7 +9,7 @@ namespace PackerTest
     public class BruteForceTests
     {
         [TestMethod]
-        public void No_Items_Permutations()
+        public void Number_of_solution_permutations_for_empty_list()
         {
             var count = BruteForce.GetPermutationsCount(new int[] {});
 
@@ -16,7 +17,7 @@ namespace PackerTest
         }
 
         [TestMethod]
-        public void Single_Item_Permutations()
+        public void Number_of_solution_permutations_for_single_item()
         {
             var count = BruteForce.GetPermutationsCount(new[] {1});
 
@@ -24,7 +25,7 @@ namespace PackerTest
         }
 
         [TestMethod]
-        public void Large_List_Permutations()
+        public void Number_of_solution_permutations_for_large_list()
         {
             var count = BruteForce.GetPermutationsCount(new[] { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9 });
 
@@ -32,25 +33,41 @@ namespace PackerTest
         }
 
         [TestMethod]
-        public void Large_List_Permutations_2()
+        public void Brute_force_for_empty_pipes()
         {
-            var count = BruteForce.GetPermutationsCount(new[]
-            {
-                1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5
-            });
+            var pipes = new int[] {};
 
-            Console.WriteLine(count.ToString("N0"));
+            var result = BruteForce.Execute2(10, pipes);
+
+            Console.WriteLine(result);
+
+            Assert.AreEqual(0, result.MinimumNumberOfBinsRequired);
+            Assert.AreEqual(1, result.SolutionsCounts.Count());
+            Assert.AreEqual(1, result.SolutionsCounts[0]);
         }
-        
+
         [TestMethod]
-        public void Factorial()
+        public void Brute_force_for_simple_pipes()
         {
-            Assert.AreEqual(1, BruteForce.Factorial(0));
-            Assert.AreEqual(1, BruteForce.Factorial(1));
-            Assert.AreEqual(2, BruteForce.Factorial(2));
-            Assert.AreEqual(120, BruteForce.Factorial(5));
-            Assert.AreEqual(3628800, BruteForce.Factorial(10));
-            Assert.AreEqual(87178291200, BruteForce.Factorial(14));
+            var pipes = new [] {5,6};
+
+            var result = BruteForce.Execute2(6, pipes);
+
+            Console.WriteLine(result);
+
+            Assert.AreEqual(2, result.MinimumNumberOfBinsRequired);
+        }
+
+        [TestMethod]
+        public void Brute_force_for_complex_pipes()
+        {
+            var pipes = new[] { 3,3,3,2,4,5};
+
+            var result = BruteForce.Execute2(10, pipes);
+
+            Console.WriteLine(result);
+
+            Assert.AreEqual(2, result.MinimumNumberOfBinsRequired);
         }
     }
 }

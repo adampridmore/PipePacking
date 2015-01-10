@@ -1,8 +1,11 @@
-﻿namespace PiedPiper
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace PiedPiper
 {
     public static class Permutation
     {
-        public static bool NextPermutation(int[] numList)
+        private static bool NextPermutation(int[] numList)
         {
             /*
              Knuths
@@ -46,6 +49,16 @@
             }
 
             return true;
+        }
+
+        public static IEnumerable<int[]> GetPermutations(IEnumerable<int> list)
+        {
+            var listToChange = list.OrderBy(i=>i).ToArray();
+
+            do
+            {
+                yield return listToChange;
+            } while (NextPermutation(listToChange));
         }
     }
 }
