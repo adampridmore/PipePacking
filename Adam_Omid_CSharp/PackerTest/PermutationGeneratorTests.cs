@@ -49,7 +49,7 @@ namespace PackerTest
         }
 
         [TestMethod]
-        public void Has_Next()
+        public void Has_next()
         {
             var list = new[] { 1, 2 };
 

@@ -45,7 +45,7 @@ namespace PiedPiper
             {
                 if (solutionsCounts[i] > 0)
                 {
-                    yield return String.Format("(Bins: {0}, SolutionsCount: {1})", i, solutionsCounts[i].ToString("N0"));
+                    yield return String.Format("(Bins: {0}, Count: {1})", i, solutionsCounts[i].ToString("N0"));
                 }
             }
         }

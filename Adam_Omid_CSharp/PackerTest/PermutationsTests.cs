@@ -82,31 +82,5 @@ namespace PackerTest
 
             Assert.AreEqual("302,702,400", count.ToString("N0"));
         }
-
-        [TestMethod]
-        public void Threads()
-        {
-            //var pipes = new[] { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9 };
-//            var pipes = new[] { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8,9};
-            var pipes = new[] { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8};
-
-            var count = 0;
-            
-            Console.WriteLine(Permutation.GetPermutationsCount(pipes));
-
-            Parallel.ForEach(Permutation.GetPermutations(pipes), delegate(int[] pipePermutation)
-            {
-                Interlocked.Increment(ref count);
-//                if (count%100000 == 0)
-//                {
-//                    System.Diagnostics.Debug.WriteLine(count);
-////                    Console.WriteLine(count.ToString("N0"));
-//                }
-            });
-
-            Console.WriteLine(count);
-
-            //Assert.AreEqual("302,702,400", count.ToString("N0"));
-        }
     }
 }

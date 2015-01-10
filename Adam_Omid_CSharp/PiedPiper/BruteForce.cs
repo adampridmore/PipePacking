@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
 
 namespace PiedPiper
 {
@@ -15,31 +14,27 @@ namespace PiedPiper
             int? smallestNumberOfBins = null;
 
             var totalPermutations = Permutation.GetPermutationsCount(pipes);
-
             var packer = new Packer(binSize);
-
             var solutions = new int[pipes.Count() + 1];
-
             var stopwatch = Stopwatch.StartNew();
-
             var attemptCount = 0;
 
             foreach(var pipePermtation in Permutation.GetPermutations(pipes))
             {
-                var numberOfBins = GetNumberOfBins(packer, pipePermtation);
+                var numberOfBinsRequired = GetNumberOfBinsRequired(packer, pipePermtation);
                 
-                solutions[numberOfBins]++;
+                solutions[numberOfBinsRequired]++;
 
-                if (IsBetterSolution(smallestNumberOfBins, numberOfBins))
+                if (IsBetterSolution(smallestNumberOfBins, numberOfBinsRequired))
                 {
                     currentSmallestPipes = pipePermtation;
-                    smallestNumberOfBins = numberOfBins;
+                    smallestNumberOfBins = numberOfBinsRequired;
                 }
 
                 attemptCount++;
                 if (attemptCount % 1000000 == 0)
                 {
-                    WriteProgressToConsole(attemptCount, stopwatch, totalPermutations);
+                    WriteProgressToConsole(attemptCount, stopwatch, totalPermutations, smallestNumberOfBins);
                 }
             }
 
@@ -53,31 +48,25 @@ namespace PiedPiper
                 stopwatch.Elapsed);
         }
 
-        private static void WriteProgressToConsole(int attemptCount, Stopwatch stopwatch, BigInteger totalPermutations)
+        private static void WriteProgressToConsole(int attemptCount, Stopwatch stopwatch, BigInteger totalPermutations, int? smallestNumberOfBins)
         {
             var tps = attemptCount/stopwatch.Elapsed.TotalSeconds;
 
             var secondsToGo = (totalPermutations - attemptCount)/new BigInteger(tps);
             var completeAt = DateTime.Now + TimeSpan.FromSeconds((int) secondsToGo);
 
-            Console.WriteLine("Attempt: {0}, TPS: {1}, CompleteAt:{2}, SecondsToGo: {3}",
+            Console.WriteLine("Attempt: {0}, TPS: {1}, CompleteAt:{2}, SecondsToGo: {3}, BestSoFar: {4}",
                 attemptCount.ToString("N0"),
                 tps.ToString("N0"),
                 completeAt,
-                secondsToGo);
+                secondsToGo,
+                smallestNumberOfBins
+                );
         }
 
-        private static int GetNumberOfBins(Packer packer, int[] pipePermtation)
+        private static int GetNumberOfBinsRequired(Packer packer, int[] pipePermtation)
         {
-            var numberOfBins = packer.QuickPack(pipePermtation);
-
-//            var numberOfBins2 = packer.Pack(pipePermtation).Count();
-//            if (numberOfBins != numberOfBins2)
-//            {
-//                throw new Exception("Error");
-//            }
-
-            return numberOfBins;
+            return packer.QuickPack(pipePermtation);
         }
 
         private static bool IsBetterSolution(int? smallestNumberOfBins, int numberOfBins)
