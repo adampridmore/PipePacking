@@ -54,6 +54,7 @@
     <Compile Include="BigIntegerUtilTests.cs" />
     <Compile Include="BruteForceTests.cs" />
     <Compile Include="PackerTests.cs" />
+    <Compile Include="PermutationGeneratorTests.cs" />
     <Compile Include="PermutationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

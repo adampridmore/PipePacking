@@ -48,9 +48,11 @@
   <ItemGroup>
     <Compile Include="Bin.cs" />
     <Compile Include="BigIntegerUtil.cs" />
+    <Compile Include="BinListUtils.cs" />
     <Compile Include="BruteForce.cs" />
     <Compile Include="Packer.cs" />
     <Compile Include="Permutation.cs" />
+    <Compile Include="PermutationGenerator.cs" />
     <Compile Include="PipePackingResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,9 +61,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UnitTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

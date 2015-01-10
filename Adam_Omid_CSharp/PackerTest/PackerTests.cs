@@ -23,7 +23,7 @@ namespace PackerTest
         [TestMethod]
         public void TwoPipesReturnOneBin()
         {
-            var bins = new Packer(10).Pack(new List<int>() { 5, 5 });
+            var bins = new Packer(10).Pack(new List<int> { 5, 5 });
 
             Assert.AreEqual(1, bins.Count);
             Assert.AreEqual(2, bins[0].PipeCount);
@@ -51,16 +51,15 @@ namespace PackerTest
             RunExample(13, new List<int> { 1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9 });
         }
 
-        private void RunExample(int binSize, List<int> pipes, bool sortPipes = true)
+        private void RunExample(int binSize, List<int> pipes)
         {
             Console.WriteLine("BinSize: " + binSize);
             
             Console.WriteLine(String.Join(",", pipes));
             Console.WriteLine("Total Pipes Size: " + pipes.Sum(p => p));
             Console.WriteLine("Min Bins : " + Math.Ceiling(pipes.Sum(p => p) / 13M));
-            Console.WriteLine("Pipes sorted: " + sortPipes);
             
-            var bins = new Packer(binSize).Pack(pipes, sortPipes);
+            var bins = new Packer(binSize).Pack(pipes);
 
             Console.WriteLine("Solution: Bins Count: " + bins.Count);
             foreach (var bin in bins)
@@ -78,8 +77,7 @@ namespace PackerTest
         [TestMethod]
         public void SubOptimal()
         {
-            RunExample(11, new List<int> { 7, 2, 2,2, 3, 3, 3 }, true);
-            RunExample(11, new List<int> { 7, 2, 2,2, 3, 3, 3 }, false);
+            RunExample(11, new List<int> { 7, 2, 2,2, 3, 3, 3 });
         }
 
         [TestMethod]
@@ -96,6 +94,40 @@ namespace PackerTest
             var pipes = new[] {1, 1, 3, 4, 4, 5, 6, 6, 6, 8, 8, 8, 9, 9};
 
             BruteForce.Execute(13, pipes);
+        }
+
+        [TestMethod]
+        public void QuickPacker()
+        {
+            var numberOfBinsRequired = new Packer(10).QuickPack(new[] {1, 2, 3});
+
+            Assert.AreEqual(1, numberOfBinsRequired);
+        }
+
+        [TestMethod]
+        public void QuickPacker_for_no_pipes()
+        {
+            var numberOfBinsRequired = new Packer(10).QuickPack(new int [] {});
+
+            Assert.AreEqual(0, numberOfBinsRequired);
+        }
+
+        [TestMethod]
+        public void QuickPacker_for_a_few_pipes()
+        {
+            var pipes = new[] { 5,4,4,3 };
+
+            var numberOfBins = new Packer(8).QuickPack(pipes);
+            Assert.AreEqual(3, numberOfBins);
+        }
+
+        [TestMethod]
+        public void QuickPacker_for_a_problem_set_of_pipes()
+        {
+            var pipes = new[] { 7, 2, 2, 3, 3, 3, 2 };
+
+            var numberOfBins = new Packer(11).QuickPack(pipes);
+            Assert.AreEqual(2, numberOfBins);
         }
     }
 }

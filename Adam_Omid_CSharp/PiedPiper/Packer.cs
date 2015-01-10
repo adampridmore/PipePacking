@@ -12,36 +12,52 @@ namespace PiedPiper
             _binSize = binSize;
         }
 
-        public List<Bin> Pack(IEnumerable<int> pipes, bool sort = true)
+        public List<Bin> Pack(IEnumerable<int> pipes)
         {
-            if (sort)
+            if (pipes == null || !pipes.Any())
             {
-                pipes = pipes.OrderByDescending(p => p).ToList();    
+                return new List<Bin>();
             }
 
-            return PackPipes(pipes);
-        }
-
-        private List<Bin> PackPipes(IEnumerable<int> pipes)
-        {
             var bins = new List<Bin>();
+            var currentBin = new Bin(_binSize);
+            bins.Add(currentBin);
 
             foreach (var pipe in pipes)
             {
-                if (!Fit(bins, pipe))
+                if (!currentBin.TryAddPipe(pipe))
                 {
-                    var newBin = new Bin(_binSize);
-                    newBin.Add(pipe);
-                    bins.Add(newBin);
+                    currentBin = new Bin(_binSize);
+                    currentBin.Add(pipe);
+                    bins.Add(currentBin);
                 }
             }
 
             return bins;
         }
 
-        private bool Fit(IEnumerable<Bin> bins, int pipe)
+        public int QuickPack(int[] pipes)
         {
-            return bins.Any(bin => bin.TryAddPipe(pipe));
+            if (!pipes.Any())
+            {
+                return 0;
+            }
+
+            var currentBinRemainning = 0;
+            var numberOfBinsUsed = 0;
+
+            foreach (var pipe in pipes)
+            {
+                if (currentBinRemainning - pipe < 0)
+                {
+                    currentBinRemainning = _binSize;
+                    numberOfBinsUsed++;
+                }
+
+                currentBinRemainning -= pipe;
+            }
+
+            return numberOfBinsUsed;
         }
     }
 }

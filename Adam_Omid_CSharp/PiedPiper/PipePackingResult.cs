@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using PiedPiper;
 
 namespace PiedPiper
 {
     public class PipePackingResult
     {
-        public PipePackingResult(int[] pipes, int minimumNumberOfBinsRequired, 
+        public PipePackingResult(int binSize, int[] pipes, 
             int[] solutionsCounts, IEnumerable<Bin> aBestSolution,
             int numberOfAttempts, TimeSpan duration)
         {
+            BinSize = binSize;
             Pipes = pipes;
-            MinimumNumberOfBinsRequired = minimumNumberOfBinsRequired;
             SolutionsCounts = solutionsCounts;
             ABestSolution = aBestSolution;
             NumberOfPermutationsTried = numberOfAttempts;
@@ -22,13 +24,17 @@ namespace PiedPiper
         {
             var sb = new StringBuilder();
             sb.AppendFormat("Pipes: {0}{1}", String.Join(",",Pipes), Environment.NewLine);
+            sb.AppendFormat("BinSize: {0}{1}", BinSize, Environment.NewLine);
             sb.AppendFormat("MinimumNumberOfBinsRequired: {0}{1}", MinimumNumberOfBinsRequired, Environment.NewLine);
             sb.AppendFormat("NumberOfPermutationsTried: {0}{1}", NumberOfPermutationsTried.ToString("N0"), Environment.NewLine);
             sb.AppendFormat("Duration: {0}ms{1}", Duration.TotalMilliseconds.ToString("N0"), Environment.NewLine);
 
             sb.AppendFormat("SolutionsCounts: {0}{1}", String.Join(",", GetSolutionsCountsText(SolutionsCounts)), Environment.NewLine);
 
-            WriteABestSolution(sb);
+            if (ABestSolution != null)
+            {
+                sb.AppendLine(ABestSolution.ToResultString());    
+            }
 
             return sb.ToString();
         }
@@ -39,23 +45,27 @@ namespace PiedPiper
             {
                 if (solutionsCounts[i] > 0)
                 {
-                    yield return String.Format("(Bins: {0}, SolutionsCount: {1})", i, solutionsCounts[i]);
+                    yield return String.Format("(Bins: {0}, SolutionsCount: {1})", i, solutionsCounts[i].ToString("N0"));
                 }
             }
         }
 
-        private void WriteABestSolution(StringBuilder sb)
+        public int BinSize { get; private set; }
+        public int[] Pipes { get; private set; }
+
+        public int MinimumNumberOfBinsRequired
         {
-            sb.AppendLine("ABestSolution:");
-            foreach (var bin in ABestSolution)
+            get
             {
-                var binText = String.Join(",", bin.Pipes);
-                sb.AppendFormat("{0} ({1}){2}", binText, bin.CurrentSize(), Environment.NewLine);
+                if (ABestSolution == null)
+                {
+                    return 0;
+                }
+
+                return ABestSolution.Count();
             }
         }
 
-        public int[] Pipes { get; private set; }
-        public int MinimumNumberOfBinsRequired { get; private set; }
         public int[] SolutionsCounts { get; private set; }
         public IEnumerable<Bin> ABestSolution { get; private set; }
         public int NumberOfPermutationsTried { get; private set; }
