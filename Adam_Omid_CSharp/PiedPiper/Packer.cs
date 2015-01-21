@@ -5,11 +5,11 @@ namespace PiedPiper
 {
     public class Packer
     {
-        private readonly int _binSize;
+        private readonly int _packetSize;
 
-        public Packer(int binSize )
+        public Packer(int packetSize)
         {
-            _binSize = binSize;
+            _packetSize = packetSize;
         }
 
         public List<Bin> Pack(IEnumerable<int> pipes)
@@ -20,14 +20,14 @@ namespace PiedPiper
             }
 
             var bins = new List<Bin>();
-            var currentBin = new Bin(_binSize);
+            var currentBin = new Bin(_packetSize);
             bins.Add(currentBin);
 
             foreach (var pipe in pipes)
             {
                 if (!currentBin.TryAddPipe(pipe))
                 {
-                    currentBin = new Bin(_binSize);
+                    currentBin = new Bin(_packetSize);
                     currentBin.Add(pipe);
                     bins.Add(currentBin);
                 }
@@ -43,21 +43,20 @@ namespace PiedPiper
                 return 0;
             }
 
-            var currentBinRemainning = 0;
-            var numberOfBinsUsed = 0;
+            var currentPacketRemainning = 0;
+            var numberOfPacketsUsed = 0;
 
             foreach (var pipe in pipes)
             {
-                if (currentBinRemainning - pipe < 0)
+                if (currentPacketRemainning - pipe < 0)
                 {
-                    currentBinRemainning = _binSize;
-                    numberOfBinsUsed++;
+                    currentPacketRemainning = _packetSize;
+                    numberOfPacketsUsed++;
                 }
-
-                currentBinRemainning -= pipe;
+                currentPacketRemainning -= pipe;
             }
 
-            return numberOfBinsUsed;
+            return numberOfPacketsUsed;
         }
     }
 }
